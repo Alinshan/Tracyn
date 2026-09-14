@@ -203,6 +203,98 @@ Deleted files  : 0
 New files      : 0
 Total alerts   : 0
 ```
+# ⚡ Real-Time File Integrity Monitoring
+
+This document explains how to use the real-time monitoring feature of the File Integrity Monitoring Tool.
+
+## 1. Start Real-Time Monitoring
+
+Open a terminal and go to the project directory.
+
+```bash
+cd ~/file-integrity-monitor
+```
+
+Start the real-time monitor:
+
+```bash
+python3 realtime_monitor.py
+```
+
+You should see:
+
+```text
+==================================================
+   REAL-TIME FILE INTEGRITY MONITOR
+==================================================
+Monitoring: monitored_files
+Press Ctrl+C to stop.
+```
+
+Keep this terminal running.
+
+## 2. Test File Modification
+
+Open a second terminal.
+
+Go to the project directory:
+
+```bash
+cd ~/file-integrity-monitor
+```
+
+Modify the monitored file:
+
+```bash
+echo "Real-time test" >> monitored_files/config.txt
+```
+
+The first terminal should show:
+
+```text
+[ALERT] FILE MODIFIED: monitored_files/config.txt
+```
+
+## 3. Test New File Detection
+
+In the second terminal, create a new file:
+
+```bash
+echo "New file test" > monitored_files/testfile.txt
+```
+
+The first terminal should show:
+
+```text
+[ALERT] NEW FILE: monitored_files/testfile.txt
+```
+
+## 4. Test Deleted File Detection
+
+Delete the test file:
+
+```bash
+rm monitored_files/testfile.txt
+```
+
+The first terminal should show:
+
+```text
+[ALERT] FILE DELETED: monitored_files/testfile.txt
+```
+
+## 5. Stop Real-Time Monitoring
+
+Return to the first terminal and press:
+
+```text
+Ctrl + C
+```
+
+The monitor will stop safely.
+
+  
+
 
 ## 🔎 How It Works
 
@@ -229,6 +321,16 @@ Total alerts   : 0
                      ▼
                   Alert Log
 ```
+
+The real-time monitor checks the `monitored_files` directory every few seconds.
+
+It calculates SHA-256 hashes and compares the current state with the previous state.
+
+It reports:
+
+- **FILE MODIFIED** — an existing file changed
+- **NEW FILE** — a new file appeared
+- **FILE DELETED** — a previously monitored file disappeared
 
 ## 🔐 Security Concept
 
