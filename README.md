@@ -315,3 +315,15 @@ Only monitor files and systems that you own or have permission to monitor.
 **Nyla S**
 
 Cybersecurity Student
+
+## 📜 Copyright & Usage
+
+Copyright © 2026 Nyla S. All rights reserved.
+
+This project is created and maintained by Nyla S.
+
+You may view this project and follow the documented steps for personal, educational, and cybersecurity learning purposes.
+
+You may not claim this project as your own, remove the author's name or copyright notice, or redistribute the source code as your own work without written permission from the author.
+
+The author retains all copyright and ownership rights to this project.
