@@ -28,9 +28,9 @@ def get_file_hashes():
     return hashes
 
 
-def log_alert(message):
+def log_alert(severity, message):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_message = f"[{timestamp}] {message}"
+    log_message = f"[{timestamp}] [{severity}] {message}"
 
     print(log_message)
 
@@ -57,17 +57,17 @@ try:
         for filepath in current_hashes:
             if filepath in previous_hashes:
                 if current_hashes[filepath] != previous_hashes[filepath]:
-                    log_alert(f"ALERT: FILE MODIFIED: {filepath}")
+                    log_alert("MEDIUM", f"FILE MODIFIED: {filepath}")
 
         # Detect new files
         for filepath in current_hashes:
             if filepath not in previous_hashes:
-                log_alert(f"ALERT: NEW FILE: {filepath}")
+                log_alert("LOW", f"NEW FILE: {filepath}")
 
         # Detect deleted files
         for filepath in previous_hashes:
             if filepath not in current_hashes:
-                log_alert(f"ALERT: FILE DELETED: {filepath}")
+                log_alert("HIGH", f"FILE DELETED: {filepath}")
 
         previous_hashes = current_hashes
 
