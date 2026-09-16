@@ -210,18 +210,30 @@ The tool should only be used on files and systems that you own or have permissio
 
 SHA-256 is used to create file hashes that can be compared to detect changes in file contents.
 
+
 ## 📸 Screenshots
 
-Recommended screenshots:
+### 🖥️ Interactive Menu
 
-1. Interactive menu
-2. Successful baseline creation
-3. Integrity scan
-4. Real-time monitoring
-5. New file detection
-6. Modified file detection
-7. Deleted file detection
-8. Security report
+![Interactive Menu](menu.png)
+
+### 🔎 Integrity Scan
+
+![Integrity Scan](scan1.png)
+
+### 🚨 Real-Time Alert
+
+![Real-Time Alert](realtime-alert.png)
+
+### 📊 Generate Security Report
+
+![Generate Security Report](generate%20security%20report.png)
+
+### 📄 Security Report
+
+![Security Report](security%20report.png)
+
+
 
 ## 🎓 Skills Demonstrated
 
