@@ -299,6 +299,7 @@ For an easier way to use the tool, run:
 
 ```bash
 python3 menu.py  
+```
 
 
 ## 🔎 How It Works
@@ -325,6 +326,7 @@ python3 menu.py
                      │
                      ▼
                   Alert Log
+```
 ```
 
 The real-time monitor checks the `monitored_files` directory every few seconds.
