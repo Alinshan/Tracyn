@@ -139,6 +139,27 @@ It reports:
 
 Every detected alert is displayed in the terminal and saved with a timestamp in `alerts.log`.
 
+
+## 🚨 Alert Severity Levels
+
+The real-time monitor uses three severity levels:
+
+- LOW — A new file was detected.
+- MEDIUM — An existing file was modified.
+- HIGH — An existing file was deleted.
+
+Examples:
+
+[LOW] NEW FILE: monitored_files/testfile.txt
+
+[MEDIUM] FILE MODIFIED: monitored_files/config.txt
+
+[HIGH] FILE DELETED: monitored_files/testfile.txt
+
+These severity levels help users quickly understand the importance of each detected file integrity event.
+
+
+
 ## ⚠️ Important
 
 Use this tool only on files and systems that you own or have permission to monitor.
