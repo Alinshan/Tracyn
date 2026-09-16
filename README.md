@@ -293,7 +293,12 @@ Ctrl + C
 
 The monitor will stop safely.
 
-  
+## 🖥️ Interactive Menu
+
+For an easier way to use the tool, run:
+
+```bash
+python3 menu.py  
 
 
 ## 🔎 How It Works
