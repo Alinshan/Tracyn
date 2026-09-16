@@ -3,3 +3,4 @@ baseline.sha256
 alerts.log
 __pycache__/
 *.pyc
+security_report.txt
