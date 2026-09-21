@@ -166,6 +166,6 @@ Use this tool only on files and systems that you own or have permission to monit
 
 ## © Copyright
 
-Copyright © 2026 Nyla S. All rights reserved.
+Copyright © 2026 Alinshan. All rights reserved.
 
-This project is created and maintained by Nyla S. The author retains all copyright and ownership rights to this project.
+This project is created and maintained by Alinshan. The author retains all copyright and ownership rights to this project.

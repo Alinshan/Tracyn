@@ -1,280 +1,217 @@
-# 🔐 File Integrity Monitoring Tool
+# Tracyn — File Integrity Monitor
 
-A Python-based cybersecurity tool designed to detect unauthorized changes to monitored files using SHA-256 hashing. The project supports baseline creation, integrity scanning, real-time monitoring, severity-based alerts, security logging, and report generation.
+A Python tool that detects unauthorized changes to files using SHA-256 cryptographic hashing. It tracks file modifications, deletions, and new file additions — and generates timestamped security alerts and reports.
 
-## 🎯 Project Overview
+---
 
-File Integrity Monitoring (FIM) is a security technique used to detect unexpected changes to important files.
+## What This Project Does
 
-This project creates a trusted baseline of monitored files and compares future file states against that baseline. It can identify modified, deleted, and newly created files and generate security alerts.
+Integrity Monitor works by taking a snapshot (baseline) of your files' SHA-256 hashes. Every time you run a scan or enable real-time monitoring, it compares the current file state against that baseline and raises alerts for any differences.
 
-The project was developed as a hands-on cybersecurity project to practice file integrity monitoring, cryptographic hashing, Linux security, Python scripting, security event detection, and security reporting.
+It can detect:
+- **Modified files** — content has changed since the baseline
+- **Deleted files** — a previously monitored file is gone
+- **New files** — a file appeared that wasn't in the baseline
 
-## ✨ Key Features
+All detected events are logged to `alerts.log` with a timestamp and severity level, and can be exported as a `security_report.txt`.
 
-- 🔐 SHA-256 file hashing
-- 📋 Trusted baseline creation
-- 🔎 File integrity scanning
-- 👀 Real-time file monitoring
-- 🆕 New file detection
-- ✏️ Modified file detection
-- 🗑️ Deleted file detection
-- 🚨 Severity-based alerts: LOW, MEDIUM, HIGH
-- 📝 Timestamped security alert logging
-- 📊 Security report generation
-- 🖥️ Interactive command-line menu
-- 🐧 Linux-based security project
+---
 
-## 🛠️ Technologies Used
+## Features
 
-- Python 3
-- SHA-256
-- Linux / Kali Linux
-- Git
-- GitHub
-- Command Line Interface (CLI)
+| Feature | Description |
+|---|---|
+| SHA-256 hashing | Cryptographically strong hash per file |
+| Baseline protection | The baseline file itself is hashed to detect tampering |
+| Integrity scanning | On-demand comparison against the baseline |
+| Real-time monitoring | Continuous polling every 2 seconds for live detection |
+| Severity levels | LOW / MEDIUM / HIGH per event type |
+| Alert logging | All events saved to `alerts.log` with timestamps |
+| Security report | Summary report exported to `security_report.txt` |
+| Interactive menu | CLI menu to run all functions without memorising commands |
 
-## 🏗️ How It Works
+---
 
-    Monitored Files
-           |
-           v
-    SHA-256 Hashing
-           |
-           v
-    Trusted Baseline
-           |
-           v
-    Integrity Check
-           |
-      +----+----+----+
-      |    |    |
-      v    v    v
-   Modified New  Deleted
-      |    |    |
-      +----+----+
-           |
-           v
-    Security Alert
-           |
-      +----+----+
-      |         |
-      v         v
-  alerts.log  Security Report
+## How It Works
 
-## 🖥️ Interactive Menu
+```
+monitored_files/
+       |
+       v
+ SHA-256 hashing
+       |
+       v
+ baseline.json  <--  baseline.sha256 (tamper check)
+       |
+       v
+ Integrity scan / Real-time monitor
+       |
+  +---------+---------+
+  |         |         |
+  v         v         v
+MODIFIED  DELETED   NEW FILE
+  |         |         |
+  +---------+---------+
+            |
+            v
+       alerts.log
+            |
+            v
+    security_report.txt
+```
 
-Start the tool with:
+---
 
-    python3 menu.py
+## Project Structure
 
-The menu provides:
+```
+Integrity-Monitor/
+├── fim.py                  # Baseline creation and integrity scanning
+├── realtime_monitor.py     # Continuous real-time file monitoring
+├── generate_report.py      # Security report generator
+├── menu.py                 # Interactive CLI menu
+├── README.md
+├── REAL_TIME_MONITORING.md # Real-time monitoring walkthrough
+├── LICENSE
+├── .gitignore
+└── monitored_files/
+    └── config.txt          # Example monitored file
+```
 
-    1. Create baseline
-    2. Scan files
-    3. Start real-time monitoring
-    4. Generate security report
-    5. Exit
+---
 
-## 📁 Project Structure
+## Requirements
 
-    file-integrity-monitor/
-    ├── fim.py
-    ├── realtime_monitor.py
-    ├── generate_report.py
-    ├── menu.py
-    ├── README.md
-    ├── REAL_TIME_MONITORING.md
-    ├── LICENSE
-    ├── .gitignore
-    └── monitored_files/
-        └── config.txt
+- Python 3 (no external packages required)
+- Linux / Kali Linux recommended
 
-### File Descriptions
+---
 
-| File | Purpose |
-|------|---------|
-| `fim.py` | Creates the baseline and performs file integrity scans |
-| `realtime_monitor.py` | Continuously monitors files for changes |
-| `generate_report.py` | Generates a security report from recorded alerts |
-| `menu.py` | Provides an interactive interface for the main functions |
-| `REAL_TIME_MONITORING.md` | Documentation for real-time monitoring |
-| `alerts.log` | Stores timestamped security alerts |
-| `security_report.txt` | Generated security report |
-| `monitored_files/` | Directory containing files selected for monitoring |
+## Installation
 
-## ⚙️ Installation
+```bash
+git clone https://github.com/Alinshan/Tracyn.git
+cd Tracyn
+python3 --version
+```
 
-### 1. Clone the Repository
+---
 
-    git clone https://github.com/nylagouri2003/file-integrity-monitor.git
+## Usage
 
-### 2. Enter the Project Directory
+### Interactive Menu (recommended)
 
-    cd file-integrity-monitor
+```bash
+python3 menu.py
+```
 
-### 3. Check Python Installation
-
-    python3 --version
-
-No external Python packages are required for the core functionality.
-
-## 🚀 Usage
-
-### Interactive Menu
-
-    python3 menu.py
+```
+========================================
+      FILE INTEGRITY MONITOR
+========================================
+1. Create baseline
+2. Scan files
+3. Start real-time monitoring
+4. Generate security report
+5. Exit
+========================================
+```
 
 ### Create a Baseline
 
-    python3 fim.py --baseline
+```bash
+python3 fim.py --baseline
+```
+
+Hashes every file in `monitored_files/`, saves results to `baseline.json`, and creates `baseline.sha256` to protect the baseline from tampering.
 
 ### Run an Integrity Scan
 
-    python3 fim.py --scan
+```bash
+python3 fim.py --scan
+```
+
+Compares current file hashes against the baseline. Reports modified, deleted, and new files with severity levels and a scan summary.
 
 ### Start Real-Time Monitoring
 
-    python3 realtime_monitor.py
+```bash
+python3 realtime_monitor.py
+```
+
+Polls `monitored_files/` every 2 seconds and prints a live alert whenever a change is detected. Press `Ctrl+C` to stop.
 
 ### Generate a Security Report
 
-    python3 generate_report.py
+```bash
+python3 generate_report.py
+```
 
-## 🧪 Testing
+Reads `alerts.log` and writes a formatted summary to `security_report.txt`, including counts by severity and all recorded events.
 
-The project can be tested by creating, modifying, and deleting files inside the monitored directory.
+---
 
-### Test New File Detection
+## Alert Severity Levels
 
-    echo "Test file" > monitored_files/testfile.txt
+| Severity | Trigger |
+|---|---|
+| `LOW` | A new file appeared in the monitored directory |
+| `MEDIUM` | An existing monitored file was modified |
+| `HIGH` | An existing monitored file was deleted |
 
-Expected alert:
+Example alerts in `alerts.log`:
 
-    [LOW] NEW FILE: monitored_files/testfile.txt
+```
+2026-09-21 18:00:00 | HIGH   | FILE DELETED  | monitored_files/config.txt
+2026-09-21 18:01:00 | MEDIUM | FILE MODIFIED | monitored_files/config.txt
+2026-09-21 18:02:00 | LOW    | NEW FILE      | monitored_files/testfile.txt
+```
 
-### Test File Modification Detection
+---
 
-    echo "Modified content" >> monitored_files/config.txt
+## Testing
 
-Expected alert:
+Add a file (LOW alert):
 
-    [MEDIUM] FILE MODIFIED: monitored_files/config.txt
+```bash
+echo "test" > monitored_files/testfile.txt
+python3 fim.py --scan
+```
 
-### Test File Deletion Detection
+Modify a file (MEDIUM alert):
 
-    rm monitored_files/testfile.txt
+```bash
+echo "changed" >> monitored_files/config.txt
+python3 fim.py --scan
+```
 
-Expected alert:
+Delete a file (HIGH alert):
 
-    [HIGH] FILE DELETED: monitored_files/testfile.txt
+```bash
+rm monitored_files/testfile.txt
+python3 fim.py --scan
+```
 
-> Note: Perform testing only on files you are authorized to monitor.
+> Only test on files and systems you own or have permission to monitor.
 
-## 🚨 Alert Severity Levels
+---
 
-| Severity | Event |
-|----------|-------|
-| LOW | New file detected |
-| MEDIUM | Existing file modified |
-| HIGH | Existing file deleted |
+## Security Notes
 
-## 📊 Security Alerts and Reports
+- `baseline.sha256` stores a hash of `baseline.json`. If the baseline file is tampered with, the scan is aborted with a critical alert before any comparison is made.
+- `security_report.txt` and `alerts.log` are excluded from Git via `.gitignore`.
+- This tool is intended for educational and authorized security monitoring only.
 
-Detected security events are recorded in `alerts.log`.
+---
 
-View the alert log with:
+## Author
 
-    cat alerts.log
+**Alinshan**
 
-Generate a security report with:
+- GitHub: https://github.com/Alinshan
 
-    python3 generate_report.py
+---
 
-The generated report contains:
+## License
 
-- Report generation timestamp
-- Total number of alerts
-- LOW alerts
-- MEDIUM alerts
-- HIGH alerts
-- Recorded security events
-
-The generated `security_report.txt` file is excluded from Git using `.gitignore`.
-
-## 🔒 Security Considerations
-
-This project is intended for educational and authorized security monitoring purposes.
-
-The tool should only be used on files and systems that you own or have permission to monitor.
-
-SHA-256 is used to create file hashes that can be compared to detect changes in file contents.
-
-
-## 📸 Screenshots
-
-### 🖥️ Interactive Menu
-
-![Interactive Menu](menu.png)
-
-### 🔎 Integrity Scan
-
-![Integrity Scan](scan1.png)
-
-### 🚨 Real-Time Alert
-
-![Real-Time Alert](realtime-alert.png)
-
-### 📊 Generate Security Report
-
-![Generate Security Report](generate%20security%20report.png)
-
-### 📄 Security Report
-
-![Security Report](security%20report.png)
-
-
-
-## 🎓 Skills Demonstrated
-
-- File Integrity Monitoring (FIM)
-- Cryptographic hashing
-- SHA-256
-- Security event detection
-- Real-time monitoring
-- Security alert classification
-- Security logging
-- Report generation
-- Python scripting
-- Linux command-line tools
-- Git and GitHub
-- Basic security automation
-- Technical documentation
-
-## 🎯 Project Goals
-
-- Understand how File Integrity Monitoring works
-- Practice cryptographic hashing with SHA-256
-- Detect unauthorized file changes
-- Implement real-time security monitoring
-- Generate and analyze security alerts
-- Practice Python-based security automation
-- Develop a practical cybersecurity portfolio project
-
-## 👩‍💻 Author
-
-**Nyla S**
-
-Cybersecurity learner interested in security monitoring, ethical hacking, defensive security, and cybersecurity tools.
-
-### Connect With Me
-
-- GitHub: https://github.com/nylagouri2003
-- LinkedIn: https://www.linkedin.com/in/nyla-s
-- Email: nylas896@gmail.com
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-Copyright © 2026 Nyla S. All rights reserved.
+MIT License — Copyright © 2026 Alinshan. All rights reserved.
