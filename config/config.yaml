@@ -1,0 +1,49 @@
+project:
+  name: TRACYN
+  tagline: "Trace. Detect. Analyze. Defend."
+  environment: development
+
+monitoring:
+  paths:
+    - ./demo_environment
+    - ./monitored_files
+  recursive: true
+  exclude_patterns:
+    - "*.tmp"
+    - "*.log"
+    - "*.db"
+    - "*.sha256"
+    - "__pycache__"
+    - ".git"
+
+hashing:
+  algorithm: sha256
+  chunk_size: 1048576
+
+risk:
+  thresholds:
+    low: 24
+    medium: 49
+    high: 74
+  criticality:
+    "*.txt": NORMAL
+    "*.conf": IMPORTANT
+    "*.json": IMPORTANT
+    "*.yaml": IMPORTANT
+    "*.yml": IMPORTANT
+    "*.sh": SENSITIVE
+    "*.py": SENSITIVE
+    "*.exe": CRITICAL
+    "demo_environment/config/*": CRITICAL
+    "demo_environment/scripts/*": SENSITIVE
+
+database:
+  url: sqlite:///data/tracyn.db
+
+logging:
+  level: INFO
+  file: logs/tracyn.log
+
+dashboard:
+  host: "127.0.0.1"
+  port: 8000

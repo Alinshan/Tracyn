@@ -3,4 +3,22 @@ baseline.sha256
 alerts.log
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.db
+.Python
+env/
+venv/
+.env
+.venv/
+tracyn.egg-info/
+build/
+dist/
+
+# TRACYN specific
+data/
+demo_environment/
+logs/
 security_report.txt
+*.csv
+*.html
