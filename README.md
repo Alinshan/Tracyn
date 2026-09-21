@@ -1,217 +1,129 @@
-# Tracyn — File Integrity Monitor
+# TRACYN — Advanced Defensive Cybersecurity Platform
 
-A Python tool that detects unauthorized changes to files using SHA-256 cryptographic hashing. It tracks file modifications, deletions, and new file additions — and generates timestamped security alerts and reports.
+**Trace. Detect. Analyze. Defend.**
 
----
-
-## What This Project Does
-
-Integrity Monitor works by taking a snapshot (baseline) of your files' SHA-256 hashes. Every time you run a scan or enable real-time monitoring, it compares the current file state against that baseline and raises alerts for any differences.
-
-It can detect:
-- **Modified files** — content has changed since the baseline
-- **Deleted files** — a previously monitored file is gone
-- **New files** — a file appeared that wasn't in the baseline
-
-All detected events are logged to `alerts.log` with a timestamp and severity level, and can be exported as a `security_report.txt`.
+TRACYN is an enterprise-grade File Integrity Monitoring (FIM) and Defensive Cybersecurity Platform. Designed for modern Security Operations Centers (SOC), it replaces legacy script-based monitoring with real-time event streaming, a dynamic Risk Engine, a centralized SQLite database, and a stunning dark-themed SOC web dashboard.
 
 ---
 
-## Features
+## 🚀 Key Capabilities
 
-| Feature | Description |
-|---|---|
-| SHA-256 hashing | Cryptographically strong hash per file |
-| Baseline protection | The baseline file itself is hashed to detect tampering |
-| Integrity scanning | On-demand comparison against the baseline |
-| Real-time monitoring | Continuous polling every 2 seconds for live detection |
-| Severity levels | LOW / MEDIUM / HIGH per event type |
-| Alert logging | All events saved to `alerts.log` with timestamps |
-| Security report | Summary report exported to `security_report.txt` |
-| Interactive menu | CLI menu to run all functions without memorising commands |
+- **Real-Time Monitoring Engine:** Uses OS-level file system hooks (`watchdog`) to instantly detect tampering, rather than slow, resource-heavy polling.
+- **Cryptographic Baselines:** Captures highly-optimized SHA-256 chunks of monitored directories. The baseline files themselves are protected with anti-tamper hashes.
+- **Advanced Risk Engine:** Auto-classifies incidents based on severity, MITRE ATT&CK heuristics, and risk scoring (LOW, MEDIUM, HIGH, CRITICAL).
+- **SOC Web Dashboard:** A live, dark-mode web application featuring real-time Server-Sent Events (SSE) feeds, incident timelines, and security metric tracking.
+- **REST API:** A fully integrated `FastAPI` backend for programmatic integration and automation.
+- **Unified CLI Tool:** Manage your entire security posture from a single command-line interface.
 
 ---
 
-## How It Works
+## 🛠 Architecture
 
-```
-monitored_files/
-       |
-       v
- SHA-256 hashing
-       |
-       v
- baseline.json  <--  baseline.sha256 (tamper check)
-       |
-       v
- Integrity scan / Real-time monitor
-       |
-  +---------+---------+
-  |         |         |
-  v         v         v
-MODIFIED  DELETED   NEW FILE
-  |         |         |
-  +---------+---------+
-            |
-            v
-       alerts.log
-            |
-            v
-    security_report.txt
+TRACYN is built with a modular, scalable architecture:
+
+```text
+TRACYN/
+├── api/          # FastAPI Routes, Schemas, and SSE Event Streaming
+├── cli/          # Click-based Command Line Interface
+├── core/         # Baselines, Hashing, Watchdog Real-time Monitors, Scanners
+├── dashboard/    # HTML, Vanilla CSS, JS (SOC Dashboard)
+├── database/     # SQLAlchemy ORM, SQLite DB, Repositories
+├── demo/         # Safe Attack Simulator (Burst, Stealth, Ransomware)
+├── reports/      # PDF/TXT Security Report Generators
+└── security/     # Risk Engine, Attribution, Severity Classifications
 ```
 
 ---
 
-## Project Structure
+## 💻 Requirements
 
-```
-Integrity-Monitor/
-├── fim.py                  # Baseline creation and integrity scanning
-├── realtime_monitor.py     # Continuous real-time file monitoring
-├── generate_report.py      # Security report generator
-├── menu.py                 # Interactive CLI menu
-├── README.md
-├── REAL_TIME_MONITORING.md # Real-time monitoring walkthrough
-├── LICENSE
-├── .gitignore
-└── monitored_files/
-    └── config.txt          # Example monitored file
-```
+- **Python 3.12+**
+- Tested on Windows, macOS, and Linux
 
 ---
 
-## Requirements
+## 📥 Installation
 
-- Python 3 (no external packages required)
-- Linux / Kali Linux recommended
-
----
-
-## Installation
-
+1. Clone the repository:
 ```bash
 git clone https://github.com/Alinshan/Tracyn.git
 cd Tracyn
-python3 --version
+```
+
+2. Install dependencies (creates the global `tracyn` command):
+```bash
+pip install -e .
+```
+*(If your Python scripts directory isn't on your PATH, you can use the provided `tracyn.bat` or `tracyn.ps1` wrappers on Windows, or just run `python -m tracyn`)*
+
+---
+
+## 🛡️ Usage & Quick Start
+
+TRACYN is controlled via a centralized command-line interface.
+
+### 1. Launch the SOC Dashboard & API
+Starts the FastAPI server and the real-time event stream.
+```bash
+tracyn serve
+```
+> **Access the Dashboard:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+### 2. Create a Trusted Baseline
+Before monitoring, TRACYN needs a snapshot of the known-good state.
+```bash
+tracyn baseline create
+```
+
+### 3. Start Real-Time Monitoring
+Activates the `watchdog` sensor. Any modifications to the monitored directory will instantly trigger the Risk Engine and appear on your dashboard.
+```bash
+tracyn monitor start
+```
+
+### 4. Run an On-Demand Scan
+Forces a manual verification of the current filesystem against the active trusted baseline.
+```bash
+tracyn scan run
+```
+
+### 5. Generate a Security Report
+Compiles all incidents into an actionable security report.
+```bash
+tracyn report generate
 ```
 
 ---
 
-## Usage
+## 🎯 Safe Attack Simulation (Demo Mode)
 
-### Interactive Menu (recommended)
-
-```bash
-python3 menu.py
-```
-
-```
-========================================
-      FILE INTEGRITY MONITOR
-========================================
-1. Create baseline
-2. Scan files
-3. Start real-time monitoring
-4. Generate security report
-5. Exit
-========================================
-```
-
-### Create a Baseline
+TRACYN includes a safe sandbox to test your defenses and trigger the Risk Engine.
 
 ```bash
-python3 fim.py --baseline
+# Reset the sandbox to a clean state
+tracyn demo run reset
+
+# Simulate a brute-force modification attack
+tracyn demo run burst
 ```
-
-Hashes every file in `monitored_files/`, saves results to `baseline.json`, and creates `baseline.sha256` to protect the baseline from tampering.
-
-### Run an Integrity Scan
-
-```bash
-python3 fim.py --scan
-```
-
-Compares current file hashes against the baseline. Reports modified, deleted, and new files with severity levels and a scan summary.
-
-### Start Real-Time Monitoring
-
-```bash
-python3 realtime_monitor.py
-```
-
-Polls `monitored_files/` every 2 seconds and prints a live alert whenever a change is detected. Press `Ctrl+C` to stop.
-
-### Generate a Security Report
-
-```bash
-python3 generate_report.py
-```
-
-Reads `alerts.log` and writes a formatted summary to `security_report.txt`, including counts by severity and all recorded events.
+*(Watch your dashboard light up in real-time as the simulator modifies files!)*
 
 ---
 
-## Alert Severity Levels
+## 🔒 Security Notes
 
-| Severity | Trigger |
-|---|---|
-| `LOW` | A new file appeared in the monitored directory |
-| `MEDIUM` | An existing monitored file was modified |
-| `HIGH` | An existing monitored file was deleted |
-
-Example alerts in `alerts.log`:
-
-```
-2026-09-21 18:00:00 | HIGH   | FILE DELETED  | monitored_files/config.txt
-2026-09-21 18:01:00 | MEDIUM | FILE MODIFIED | monitored_files/config.txt
-2026-09-21 18:02:00 | LOW    | NEW FILE      | monitored_files/testfile.txt
-```
+- **Anti-Tampering:** TRACYN secures its own baselines. If a malicious actor modifies the baseline database, TRACYN will immediately abort the scan and raise a `CRITICAL` alert.
+- **Environment Context:** TRACYN is built for authorized monitoring only. Always ensure you have explicit permission to monitor the target host.
 
 ---
 
-## Testing
-
-Add a file (LOW alert):
-
-```bash
-echo "test" > monitored_files/testfile.txt
-python3 fim.py --scan
-```
-
-Modify a file (MEDIUM alert):
-
-```bash
-echo "changed" >> monitored_files/config.txt
-python3 fim.py --scan
-```
-
-Delete a file (HIGH alert):
-
-```bash
-rm monitored_files/testfile.txt
-python3 fim.py --scan
-```
-
-> Only test on files and systems you own or have permission to monitor.
-
----
-
-## Security Notes
-
-- `baseline.sha256` stores a hash of `baseline.json`. If the baseline file is tampered with, the scan is aborted with a critical alert before any comparison is made.
-- `security_report.txt` and `alerts.log` are excluded from Git via `.gitignore`.
-- This tool is intended for educational and authorized security monitoring only.
-
----
-
-## Author
+## 📝 Author
 
 **Alinshan**
-
-- GitHub: https://github.com/Alinshan
+- GitHub: [https://github.com/Alinshan](https://github.com/Alinshan)
 
 ---
 
-## License
+## 📄 License
 
 MIT License — Copyright © 2026 Alinshan. All rights reserved.
