@@ -44,7 +44,7 @@ def run_scan(config: Dict) -> List[Dict]:
 
     session = get_session()
     repo = Repository(session)
-    inc_mgr = IncidentManager(repo)
+    inc_mgr = IncidentManager(repo, config)
 
     results = []
     for change in changes:

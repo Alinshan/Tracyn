@@ -44,6 +44,10 @@ logging:
   level: INFO
   file: logs/tracyn.log
 
+alerting:
+  enabled: true
+  webhook_url: "https://hookb.in/placeholder" # Replace with your Slack/Discord webhook URL
+
 dashboard:
   host: "127.0.0.1"
   port: 8000

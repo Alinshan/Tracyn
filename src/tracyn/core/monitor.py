@@ -108,7 +108,7 @@ class TRACYNEventHandler(FileSystemEventHandler):
                 reason=reason_text,
                 file_id=file_rec.id
             )
-            inc_mgr = IncidentManager(repo)
+            inc_mgr = IncidentManager(repo, self.config)
             inc_mgr.process_event(event)
             session.close()
 
